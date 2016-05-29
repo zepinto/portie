@@ -153,6 +153,14 @@ public class ImcBus implements MessageListener<MessageInfo, IMCMessage> {
 		instance().otto.post(new EventMainSystemChanged(previous, system));
 	}
 
+	public static int getLocalId() {
+		return instance().proto.getLocalId();
+	}
+
+	public static String getLocalName() {
+		return instance().proto.getLocalName();
+	}
+
 	public static String getMainSystem() {
 		return mainSystem;
 	}

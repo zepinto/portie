@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 import pt.lsts.imc.LogBookEntry;
 import pt.lsts.imc.lsf.LsfMessageLogger;
@@ -42,6 +43,7 @@ public class PortieMain extends AppCompatActivity {
         super.onResume();
         ImcBus.register(this);
         ImcBus.logEntry(LogBookEntry.TYPE.INFO, getClass().getSimpleName(), "onResume()");
+        ListView systemList = (ListView) findViewById(R.id.systemList);
     }
 
     @Override

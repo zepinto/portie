@@ -2,17 +2,9 @@
 
     <SwitchPreference
         android:defaultValue="true"
-        android:key="vibrate"
-        android:summary="@string/pref_vibrate_description"
-        android:title="@string/pref_vibrate_title" />
-
-    <EditTextPreference
-        android:defaultValue=""
-        android:key="network_name"
-        android:maxLines="1"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="@string/pref_network_name_title"
-        android:summary="@string/pref_network_name_description"/>
+        android:key="vehicles_only"
+        android:summary="@string/pref_veh_only_description"
+        android:title="@string/pref_veh_only_title"
+        />
 
 </PreferenceScreen>
