@@ -1,15 +1,17 @@
 package pt.lsts.util;
 
+import com.squareup.otto.Bus;
+import com.squareup.otto.ThreadEnforcer;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.squareup.otto.Bus;
-import com.squareup.otto.ThreadEnforcer;
-
 import pt.lsts.imc.Announce;
 import pt.lsts.imc.IMCMessage;
+import pt.lsts.imc.LogBookEntry;
+import pt.lsts.imc.lsf.LsfMessageLogger;
 import pt.lsts.imc.net.IMCProtocol;
 import pt.lsts.imc.state.ImcSystemState;
 import pt.lsts.neptus.messages.listener.MessageInfo;
@@ -24,6 +26,8 @@ public class ImcBus implements MessageListener<MessageInfo, IMCMessage> {
 	private IMCProtocol proto;
 	private LinkedHashMap<String, Long> lastAnnounce;
 	private LinkedHashMap<String, Long> lastMessage;
+
+	private static String mainSystem = null;
 
 	protected ImcBus() {
 		otto = new Bus(ThreadEnforcer.ANY);
@@ -40,6 +44,8 @@ public class ImcBus implements MessageListener<MessageInfo, IMCMessage> {
 			return;
 
 		otto.post(msg);
+
+		LsfMessageLogger.log(msg);
 
 		if (msg instanceof Announce) {
 			if (!lastAnnounce.containsKey(((Announce) msg).getSysName())) {
@@ -132,5 +138,31 @@ public class ImcBus implements MessageListener<MessageInfo, IMCMessage> {
 		}
 
 		return systems;
+	}
+
+	public static void setMainSystem(String system) {
+		String previous = mainSystem;
+		if (previous == system)
+			return;
+
+		if (mainSystem != null)
+			instance().proto.disconnect(mainSystem);
+		mainSystem = system;
+		instance().proto.connect(mainSystem);
+
+		instance().otto.post(new EventMainSystemChanged(previous, system));
+	}
+
+	public static String getMainSystem() {
+		return mainSystem;
+	}
+
+	public static void logEntry(LogBookEntry.TYPE type, String context, String text) {
+		LogBookEntry entry = new LogBookEntry();
+		entry.setType(type);
+		entry.setText(text);
+		entry.setContext(context);
+		entry.setHtime(System.currentTimeMillis()/1000.0);
+		LsfMessageLogger.log(entry);
 	}
 }

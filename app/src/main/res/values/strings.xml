@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Portie</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="settings">Settings</string>
+
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_network_name_title">Network Name</string>
+    <string name="pref_network_name_description">Name to use for IMC announces</string>
+
+    <string name="pref_vibrate_title">Vibrate</string>
+    <string name="pref_vibrate_description">Vibrate once per incoming heartbeat</string>
+
 </resources>
