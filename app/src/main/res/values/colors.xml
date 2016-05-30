@@ -5,8 +5,10 @@
     <color name="colorAccent">#3399ff</color>
 
     <color name="colorService">#66cc00</color>
-    <color name="colorManeuver">#ee9900</color>
-    <color name="colorBoot">#6666ff</color>
+    <color name="colorCalibration">#66cccc</color>
+    <color name="colorManeuver">#9933ee</color>
+    <color name="colorBoot">#666666</color>
+
     <color name="colorError">#cc3333</color>
-    <color name="colorOther">#aa33aa</color>
+    <color name="colorOther">#aa6633</color>
 </resources>

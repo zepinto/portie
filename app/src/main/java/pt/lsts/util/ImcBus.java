@@ -37,7 +37,7 @@ public class ImcBus implements MessageListener<MessageInfo, IMCMessage> {
 		lastAnnounce = new LinkedHashMap<>();
 		lastMessage = new LinkedHashMap<>();
 	}
-	
+
 	@Override
 	public void onMessage(MessageInfo info, IMCMessage msg) {
 		if (instance().proto.getLocalId() == msg.getSrc())
@@ -68,7 +68,7 @@ public class ImcBus implements MessageListener<MessageInfo, IMCMessage> {
 	@Periodic(10000)
 	public void checkDisconnectedSystems() {
 		ArrayList<String> old = new ArrayList<>();
-		long tooOld = System.currentTimeMillis() - 60000;
+		long tooOld = System.currentTimeMillis() - 30000;
 
 		synchronized (lastMessage) {
 			for (Map.Entry<String, Long> entry : lastMessage.entrySet()) {
@@ -144,7 +144,7 @@ public class ImcBus implements MessageListener<MessageInfo, IMCMessage> {
 		String previous = mainSystem;
 		if (previous == system)
 			return;
-
+		mainSystem = system;
 		/*if (mainSystem != null)
 			instance().proto.disconnect(mainSystem);
 		mainSystem = system;

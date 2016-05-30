@@ -1,6 +1,7 @@
 package pt.lsts.syslist;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,19 @@ public class SystemListAdapter extends BaseAdapter {
     LinkedHashMap<String, Announce.SYS_TYPE> types = new LinkedHashMap<>();
 
     public void setAnnounce(Announce announce) {
+        boolean vehiclesOnly = (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("vehicles_only", false));
+
         if (!states.containsKey(announce.getSysName())) {
+            if (vehiclesOnly) {
+                switch (announce.getSysType()) {
+                    case CCU:
+                    case HUMANSENSOR:
+                    case MOBILESENSOR:
+                    case STATICSENSOR:
+                    case WSN:
+                        return;
+                }
+            }
             synchronized (systems) {
                 states.put(announce.getSysName(), VehicleState.OP_MODE.BOOT);
                 systems.add(announce.getSysName());
@@ -63,6 +76,14 @@ public class SystemListAdapter extends BaseAdapter {
 
     public SystemListAdapter(Context context) {
         this.mContext = context;
+        synchronized (systems) {
+            for (String s : ImcBus.getActiveSystems()) {
+                systems.add(s);
+                states.put(s, VehicleState.OP_MODE.BOOT);
+                types.put(s, Announce.SYS_TYPE.CCU);
+            }
+            Collections.sort(systems);
+        }
     }
 
     public int getCount() {
@@ -89,6 +110,28 @@ public class SystemListAdapter extends BaseAdapter {
         TextView tv = (TextView) v.findViewById(R.id.txtName);
         v.setBackgroundColor(0xFF00FF00);
         tv.setText(vehicle);
+
+        switch (states.get(vehicle)) {
+            case CALIBRATION:
+                v.setBackgroundColor(mContext.getResources().getColor(R.color.colorCalibration));
+                break;
+            case BOOT:
+                v.setBackgroundColor(mContext.getResources().getColor(R.color.colorBoot));
+                break;
+            case ERROR:
+                v.setBackgroundColor(mContext.getResources().getColor(R.color.colorError));
+                break;
+            case MANEUVER:
+                v.setBackgroundColor(mContext.getResources().getColor(R.color.colorManeuver));
+                break;
+            case SERVICE:
+                v.setBackgroundColor(mContext.getResources().getColor(R.color.colorService));
+                break;
+            default:
+                v.setBackgroundColor(mContext.getResources().getColor(R.color.colorOther));
+                break;
+        }
+
         ((Button)v.findViewById(R.id.btnSelect)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
