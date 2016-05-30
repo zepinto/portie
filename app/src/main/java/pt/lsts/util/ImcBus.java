@@ -145,10 +145,10 @@ public class ImcBus implements MessageListener<MessageInfo, IMCMessage> {
 		if (previous == system)
 			return;
 
-		if (mainSystem != null)
+		/*if (mainSystem != null)
 			instance().proto.disconnect(mainSystem);
 		mainSystem = system;
-		instance().proto.connect(mainSystem);
+		instance().proto.connect(mainSystem);*/
 
 		instance().otto.post(new EventMainSystemChanged(previous, system));
 	}
